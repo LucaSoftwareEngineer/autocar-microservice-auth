@@ -25,4 +25,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/role")
+    public ResponseEntity<String> getRole(@RequestHeader(name = "Authorization") String token) {
+        try {
+            return ResponseEntity.ok().body(userService.getRole(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 }
