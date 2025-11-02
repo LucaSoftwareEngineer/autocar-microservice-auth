@@ -3,6 +3,7 @@ package autocar.microservice.services;
 import autocar.microservice.config.JwtUtil;
 import autocar.microservice.dto.RegisterRequest;
 import autocar.microservice.dto.RegisterResponse;
+import autocar.microservice.dto.TokenCheckResponse;
 import autocar.microservice.exceptions.InvalidRole;
 import autocar.microservice.models.Role;
 import autocar.microservice.models.User;
@@ -40,6 +41,17 @@ public class UserService {
         String email = jwtUtil.extractUsername(token.replace("Bearer ", ""));
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found"));
         return user.getRole();
+    }
+
+    public TokenCheckResponse tokenCheck(String token) {
+        TokenCheckResponse tokenCheckResponse = new TokenCheckResponse();
+        tokenCheckResponse.setValido(
+            jwtUtil.validateToken(
+                token.replace("Bearer ", ""),
+                jwtUtil.extractUsername(token.replace("Bearer ", ""))
+            )
+        );
+        return tokenCheckResponse;
     }
 
 }
