@@ -27,7 +27,8 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(hashedPassword);
         if (request.getRole().equals(Role.AMMINISTRATORE.name()) || request.getRole().equals(Role.SUPER_AMMINISTRATORE.name())) {
-            user.setRole(request.getRole());
+            user.setRole(Enum.valueOf(Role.class, request.getRole()));
+            //user.setRole(request.getRole());
         } else {
             throw new InvalidRole();
         }
@@ -40,7 +41,7 @@ public class UserService {
     public String getRole(String token) {
         String email = jwtUtil.extractUsername(token.replace("Bearer ", ""));
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found"));
-        return user.getRole();
+        return user.getRole().name();
     }
 
     public TokenCheckResponse tokenCheck(String token) {
