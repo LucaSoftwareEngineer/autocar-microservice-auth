@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -37,11 +39,11 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    String passwordCriptata = "$2a$10$2W2L2GgPOENydBwKIqUJx.pBNgJinb4IeJryLeIK9bfl2I7gV6puS";
+    User user = new User(1L, "test", passwordCriptata, Role.AMMINISTRATORE);
+
     @Test
     public void registerUser() throws InvalidRole {
-
-        String passwordCriptata = "$2a$10$2W2L2GgPOENydBwKIqUJx.pBNgJinb4IeJryLeIK9bfl2I7gV6puS";
-        User user = new User(1L, "test", passwordCriptata, Role.AMMINISTRATORE);
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setEmail(user.getEmail());
         registerRequest.setPassword("Prova123@");
@@ -59,6 +61,13 @@ public class UserServiceTest {
         );
 
         assertEquals("test", userService.registerUser(registerRequest).getEmail());
+    }
+
+    @Test
+    public void getRole() {
+        when(jwtUtil.extractUsername(any(String.class))).thenReturn("test");
+        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(user));
+        assertEquals(Role.AMMINISTRATORE.name(),userService.getRole("test"));
     }
 
 }
