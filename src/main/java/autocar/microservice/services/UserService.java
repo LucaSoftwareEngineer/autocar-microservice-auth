@@ -4,6 +4,7 @@ import autocar.microservice.config.JwtUtil;
 import autocar.microservice.dto.RegisterRequest;
 import autocar.microservice.dto.RegisterResponse;
 import autocar.microservice.dto.TokenCheckResponse;
+import autocar.microservice.dto.UserDetailsResponse;
 import autocar.microservice.exceptions.InvalidRole;
 import autocar.microservice.models.Role;
 import autocar.microservice.models.User;
@@ -53,6 +54,17 @@ public class UserService {
             )
         );
         return tokenCheckResponse;
+    }
+
+    public UserDetailsResponse getUserDetails(String token) {
+        String email = jwtUtil.extractUsername(token.replace("Bearer ", ""));
+        User user = userRepository.findByEmail(email).get();
+        if (user != null) {
+            UserDetailsResponse res = new UserDetailsResponse();
+            res.setEmail(user.getEmail());
+            return res;
+        }
+        throw new UsernameNotFoundException("token non valido");
     }
 
 }

@@ -3,6 +3,8 @@ package autocar.microservice.controllers;
 import autocar.microservice.dto.RegisterRequest;
 import autocar.microservice.dto.RegisterResponse;
 import autocar.microservice.dto.TokenCheckResponse;
+import autocar.microservice.dto.UserDetailsResponse;
+import autocar.microservice.models.User;
 import autocar.microservice.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,15 @@ public class UserController {
     public ResponseEntity<TokenCheckResponse> tokenCheck(@RequestHeader(name = "Authorization") String token) {
         try {
             return ResponseEntity.ok().body(userService.tokenCheck(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<UserDetailsResponse> getUserDetails(@RequestHeader(name = "Authorization") String token) {
+        try {
+            return ResponseEntity.ok().body(userService.getUserDetails(token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
