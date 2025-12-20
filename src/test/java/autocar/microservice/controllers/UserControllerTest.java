@@ -44,5 +44,17 @@ public class UserControllerTest {
 		assertEquals(userController.registerUser(req), ResponseEntity.ok().body(res));
 	}
 	
+	@Test
+	public void getRoleTest() {
+		
+		String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsdWNhIiwiaWF0IjoxNzY1NDI4NTgwLCJleHAiOjE3NjU1MTQ5ODB9.wstSluhZztEi_luqNKF1LkMdfTcPykDS2gs2SQ8t6nE";
+		String ruolo = "AMMINISTRATORE";
+		
+		when(userService.getRole(any(String.class))).thenReturn(ruolo);
+		
+		assertEquals(userController.getRole(token), ResponseEntity.ok().body(ruolo));
+		
+	}
+	
 	
 }
